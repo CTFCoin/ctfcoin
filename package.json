@@ -2,8 +2,8 @@
   "name": "CTFcoin",
   "version": "1.0.0",
   "repository": {
-      "type": "git",
-      "url": "git://github.com/nbanmp/ctfcoin.git"
+    "type": "git",
+    "url": "git://github.com/nbanmp/ctfcoin.git"
   },
   "description": "ctfcoin - crypto badges - cryptokitties for hackers",
   "main": "truffle-config.js",
