@@ -165,7 +165,7 @@ contract Badge is ERC721Token {
     * @return uint64 ID of the ctf registered
     */
     function registerCtf(bytes32 _name, string _url, uint256 _startTime, uint256 _endTime) public returns (uint64) {
-        //require(_startTime > block.timestamp);
+        require(_startTime > block.timestamp);
         require(_startTime > _endTime);
 
         ctf[numCtfs].ctfName = _name;
@@ -201,7 +201,7 @@ contract Badge is ERC721Token {
 
     /**
     * @dev Submit a writeup for a completed ctf
-    * @param _ctfId uint64 ID of the completed ctf for which the writeup is foro
+    * @param _ctfId uint64 ID of the completed ctf for which the writeup is for
     * @param _url string url where the writeup is hosted
     * @param _data bytes23 data to be attached to the potential reward token
     * @return uint256 ID of the writeup created
