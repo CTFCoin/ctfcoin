@@ -31,7 +31,7 @@ contract('Badge', function(accounts) {
     return Badge.deployed().then(function(instance) {
       badge = instance;
       ctfId = 0;
-      return badge.distributeRewards(ctfId.valueOf(), accounts[0], "You Win!")
+      return badge.distributeRewards(ctfId.valueOf(), accounts[0], "You Win!", 0)
     }).then(function(tokenId) {
       tokenId = 1;
       return badge.getTokenData(tokenId.valueOf());

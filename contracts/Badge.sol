@@ -32,6 +32,7 @@ contract Badge is ERC721Token {
         address ctfOwner;
         uint256 ctfStartTime;
         uint256 ctfEndTime;
+        uint256 pot;
         uint256 rewardedTokens;
         uint256 numWriteups;
         mapping (uint256 => Writeup) writeups;
@@ -164,13 +165,14 @@ contract Badge is ERC721Token {
     * @param _endTime uint256 time of the ctf end in seconds since unix epoch
     * @return uint64 ID of the ctf registered
     */
-    function registerCtf(bytes32 _name, string _url, uint256 _startTime, uint256 _endTime) public returns (uint64) {
-        require(_startTime > block.timestamp);
+    function registerCtf(bytes32 _name, string _url, uint256 _startTime, uint256 _endTime) public payable returns (uint64) {
+        //require(_startTime > block.timestamp);
         require(_startTime > _endTime);
 
         ctf[numCtfs].ctfName = _name;
         ctf[numCtfs].ctfUrl = _url;
         ctf[numCtfs].ctfOwner = msg.sender;
+        ctf[numCtfs].pot = msg.value;
         ctf[numCtfs].ctfStartTime = _startTime;
         ctf[numCtfs].ctfEndTime = _endTime;
 
@@ -186,8 +188,14 @@ contract Badge is ERC721Token {
     * @param _data bytes23 data to be attached to the rewarded token
     * @return uint256 ID of the token created
     */
-    function distributeRewards(uint64 _ctfId, address _target, bytes23 _data) public requireOwnsCtf(_ctfId) requireCtfIsOver(_ctfId) returns (uint256 tokenId) {
+    function distributeRewards(uint64 _ctfId, address _target, bytes23 _data, uint256 eth) public requireOwnsCtf(_ctfId) requireCtfIsOver(_ctfId) returns (uint256 tokenId) {
         require(ctf[_ctfId].rewardedTokens < ctf[_ctfId].numWriteups);
+        require(eth <= ctf[_ctfId].pot);
+
+        if(eth != 0) {
+            ctf[_ctfId].pot -= eth;
+            require(_target.send(eth));
+        }
 
         bytes32[1] memory b;
         uint256 proofOfReward = 0x0000000000000000000000aa00000000;

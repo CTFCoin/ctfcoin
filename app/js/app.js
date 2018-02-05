@@ -106,8 +106,9 @@ window.distributeRewards = () => {
   let ctfId = 10;
   let target = account;
   let data = "U R A Winner.";
+  let eth = 0;
 
-  badge.distributeRewards(ctfId, target, data, {from: account, gas: 6000000}).then(function(result) {
+  badge.distributeRewards(ctfId, target, data, eth, {from: account, gas: 6000000}).then(function(result) {
     console.log("Distributed Rewards!");
     console.log(result);
 
