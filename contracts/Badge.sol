@@ -41,6 +41,9 @@ contract Badge is ERC721Token {
     // mapping from ctf ID to a CTF struct
     mapping (uint64 => CTF) public ctf;
 
+    // mapping from writup ID to its ctf ID
+    mapping (uint256 => uint64) public writeupIdToCtfId;
+
     // Modifiers
 
     /**
@@ -100,41 +103,41 @@ contract Badge is ERC721Token {
 
     /**
     * @dev Gets the team stored in the given writeup struct
-    * @param _ctfId uint64 ID of the ctf that contains the writeup to query
     * @param _writeupId uint256 ID of the writeup to query
     * @return address of the team stored in the writeup specified
     */
-    function getWriteupTeam(uint64 _ctfId, uint256 _writeupId) public view returns (address team) {
+    function getWriteupTeam(uint256 _writeupId) public view returns (address team) {
+        uint64 _ctfId = writeupIdToCtfId[_writeupId];
         team = ctf[_ctfId].writeups[_writeupId].team;
     }
 
     /**
     * @dev Gets the url stored in the given writeup struct
-    * @param _ctfId uint64 ID of the ctf that contains the writeup to query
     * @param _writeupId uint256 ID of the writeup to query
     * @return string the url stored in the writeup specified
     */
-    function getWriteupUrl(uint64 _ctfId, uint256 _writeupId) public view returns (string url) {
+    function getWriteupUrl(uint256 _writeupId) public view returns (string url) {
+        uint64 _ctfId = writeupIdToCtfId[_writeupId];
         url = ctf[_ctfId].writeups[_writeupId].url;
     }
 
     /**
     * @dev Gets the data stored in the given writeup struct
-    * @param _ctfId uint64 ID of the ctf that contains the writeup to query
     * @param _writeupId uint256 ID of the writeup to query
     * @return bytes32 the data stored in the writeup specified
     */
-    function getWriteupData(uint64 _ctfId, uint256 _writeupId) public view returns (bytes23 data) {
+    function getWriteupData(uint256 _writeupId) public view returns (bytes23 data) {
+        uint64 _ctfId = writeupIdToCtfId[_writeupId];
         data = ctf[_ctfId].writeups[_writeupId].data;
     }
 
     /**
     * @dev Gets the approval value stored in the given writeup struct
-    * @param _ctfId uint64 ID of the ctf that contains the writeup to query
     * @param _writeupId uint256 ID of the writeup to query
     * @return bool the approval value stored in the writeup specified
     */
-    function getWriteupApproved(uint64 _ctfId, uint256 _writeupId) public view returns (bool approved) {
+    function getWriteupApproved(uint256 _writeupId) public view returns (bool approved) {
+        uint64 _ctfId = writeupIdToCtfId[_writeupId];
         approved = ctf[_ctfId].writeups[_writeupId].approved;
     }
 
@@ -220,6 +223,8 @@ contract Badge is ERC721Token {
         ctf[_ctfId].writeups[numWriteups].data = _data;
         ctf[_ctfId].writeups[numWriteups].team = msg.sender;
 
+        writeupIdToCtfId[numWriteups] = _ctfId;
+
         numWriteups++;
         WriteupEvent(_ctfId, numWriteups - 1, _url);
         return numWriteups - 1;
@@ -227,11 +232,11 @@ contract Badge is ERC721Token {
 
     /**
     * @dev Lets the ctf owner approve submitted writeups. A token is given to the address that submitted the writeup
-    * @param _ctfId uint64 ID of the ctf for which the writeup belongs to
     * @param _writeupId uint256 ID of the writeup to be approved
     * @return uint256 ID of the token created
     */
-    function approveWriteup(uint64 _ctfId, uint256 _writeupId) public requireOwnsCtf(_ctfId) returns (uint256) {
+    function approveWriteup(uint256 _writeupId) public requireOwnsCtf(writeupIdToCtfId[_writeupId]) returns (uint256) {
+        uint64 _ctfId = writeupIdToCtfId[_writeupId];
         require(ctf[_ctfId].writeups[_writeupId].approved == false);
 
         ctf[_ctfId].writeups[_writeupId].approved = true;

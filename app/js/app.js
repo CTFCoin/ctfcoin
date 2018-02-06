@@ -90,10 +90,9 @@ window.submitWriteup = () => {
 }
 
 window.approveWriteup = () => {
-  let ctfId = 10;
   let writeupId = 0;
 
-  badge.approveWriteup(ctfId, writeupId, {from: account, gas: 6000000}).then(function(result) {
+  badge.approveWriteup(writeupId, {from: account, gas: 6000000}).then(function(result) {
     console.log("Approved Writeup!");
     console.log(result);
 

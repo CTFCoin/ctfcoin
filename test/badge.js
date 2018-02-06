@@ -9,16 +9,16 @@ contract('Badge', function(accounts) {
     }).then(function(r) {
       return badge.submitWriteup(0, "https://much-writeups.com", "0x41424344454647484950");
     }).then(function(r) {
-      return badge.getWriteupData(0, 0);
+      return badge.getWriteupData(0);
     }).then(function(writeupData) {
       assert.equal(writeupData, "0x4142434445464748495000000000000000000000000000", "writeupData did not match expected value");
-      return badge.getWriteupTeam(0, 0);
+      return badge.getWriteupTeam(0);
     }).then(function(writeupTeam) {
       assert.equal(writeupTeam, accounts[0], "writeupTeam did not match expected value");
-      return badge.getWriteupApproved(0, 0);
+      return badge.getWriteupApproved(0);
     }).then(function(writeupApproved) {
       assert.equal(writeupApproved, false, "writeupApproved did not match expected value");
-      return badge.approveWriteup(0, 0);
+      return badge.approveWriteup(0);
     }).then(function(r) {
       return badge.getTokenData(0);
     }).then(function(tokenData) {
